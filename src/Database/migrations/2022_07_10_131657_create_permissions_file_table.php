@@ -22,7 +22,7 @@ return new class extends BaseMigration{
             $table->timestamps();
         });
     }
-    
+
 
     public function down()
     {

@@ -13,6 +13,8 @@
         "illuminate/support": ">=5.7.19"
     },
     "autoload": {
-        "DevNullIr\\LaravelDownloader\\": "src"
+        "psr-4": {
+            "DevNullIr\\LaravelDownloader\\": "src"
+        }
     }
 }

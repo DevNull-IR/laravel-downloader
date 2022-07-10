@@ -6,6 +6,6 @@ class LaravelDownloader
 {
     public function name()
     {
-        
+        return "a";
     }
 }

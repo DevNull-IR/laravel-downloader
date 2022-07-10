@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Facade;
 /**
  * class LaravelDownloaderFacade
  *
- * @method static string doso()
+ * @method static array newDirectory()
  *
  * @see \DevNullIr\LaravelDownloader\
  * @package DevNullIr\LaravelDownloader\Facade

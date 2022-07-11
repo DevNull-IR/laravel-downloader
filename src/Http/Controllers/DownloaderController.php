@@ -8,10 +8,11 @@ class DownloaderController extends BaseController
 {
     public function download(string $DownloadToekn)
     {
+        $this->Config();
         return $DownloadToekn;
     }
 
-    public function Upload()
+    public function Config()
     {
         LaravelDownloaderFacade::newDirectory('public');
         LaravelDownloaderFacade::newDirectory('imgs');

@@ -2,40 +2,67 @@
 
 namespace DevNullIr\LaravelDownloader;
 
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+
 class LaravelDownloader
 {
-    public function name()
+    public function put(string $Path, $content): bool
     {
-        return "a";
-    }
 
+        $this->checkFile();
+        return Storage::disk('local')->put('laravel-downloader/' . $Path, $content);
+    }
+    public function append(string $Path, $content): bool
+    {
+        $this->checkFile();
+        return Storage::disk('local')->append('laravel-downloader/' . $Path, $content);
+    }
+    public function delete(string $Path): bool
+    {
+        $this->checkFile();
+        return Storage::disk('local')->delete('laravel-downloader/' . $Path);
+    }
+    public function move(string $From, string $To): bool
+    {
+        $this->checkFile();
+        return Storage::disk('local')->move('laravel-downloader/' . $From, 'laravel-downloader/' . $To);
+    }
+    public function copy(string $From, string $To): bool
+    {
+        $this->checkFile();
+
+        return Storage::disk('local')->copy('laravel-downloader/' . $From, 'laravel-downloader/' . $To);
+    }
+    public function exists(string $Path): bool
+    {
+        $this->checkFile();
+        return Storage::exists('laravel-downloader/' . $Path);
+    }
     public function checkFile(): bool
     {
-        if (!file_exists(__DIR__ . "/../../../../storage/laravel-downloader")){
-            mkdir(__DIR__ . "/../../../../storage/laravel-downloader");
+        if (!Storage::exists('laravel-downloader')){
+            Storage::makeDirectory('laravel-downloader');
             return true;
         }
         return false;
     }
-
-    public function newDirectory(string $Directory): array
+    public function makeDirectory(string $Directory): array
     {
-        if (!file_exists(__DIR__ . "/../../../../storage/laravel-downloader/" . $Directory)){
-            if (mkdir(__DIR__ . "/../../../../storage/laravel-downloader/" . $Directory)){
-                return [
+        if (!Storage::exists('laravel-downloader')){
+            Storage::makeDirectory('laravel-downloader');
+        }
+        if (!Storage::exists('laravel-downloader/' . $Directory)){
+            Storage::makeDirectory('laravel-downloader/' . $Directory);
+            return [
                     'result' => true,
                     'message' => "Directory Create Success"
                 ];
-            }
+        }else{
             return [
                 'result' => false,
-                'message' => "Directory Create Wrong"
+                'message' => "Directory Already"
             ];
-
         }
-        return [
-            'result' => false,
-            'message' => "Directory Already"
-        ];
     }
 }

@@ -11,7 +11,6 @@ class DownloaderController extends BaseController
 {
     public function download(string $DownloadToekn)
     {
-        dd(LaravelDownloaderFacade::allFiles());
         $check_file = Permissions_file::where('token', $DownloadToekn)->get();
         if ($check_file->count() == 1){
             echo time();
@@ -24,10 +23,10 @@ class DownloaderController extends BaseController
     public function Config()
     {
         $array = [];
-        $array[] = LaravelDownloaderFacade::newDirectory('public');
-        $array[] = LaravelDownloaderFacade::newDirectory('imgs');
-        $array[] = LaravelDownloaderFacade::newDirectory('fonts');
-        $array[] = LaravelDownloaderFacade::newDirectory('file');
+        $array[] = LaravelDownloaderFacade::makeDirectory('public');
+        $array[] = LaravelDownloaderFacade::makeDirectory('imgs');
+        $array[] = LaravelDownloaderFacade::makeDirectory('fonts');
+        $array[] = LaravelDownloaderFacade::makeDirectory('others');
         return $array;
     }
 }

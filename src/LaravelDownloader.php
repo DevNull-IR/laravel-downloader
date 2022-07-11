@@ -2,7 +2,9 @@
 
 namespace DevNullIr\LaravelDownloader;
 
+use DevNullIr\LaravelDownloader\Database\Models\File_dl;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Storage;
 
 class LaravelDownloader
@@ -30,12 +32,45 @@ class LaravelDownloader
     public function delete(string $Path): bool
     {
         $this->checkFile();
-        return Storage::disk('local')->delete('laravel-downloader/' . $Path);
+        if (Storage::exists('laravel-downloader/' . $Path)){
+            $getFile = File_dl::where('path', $Path)->get();
+            if ($getFile->count() == 1) {
+                $getFile->delete();
+                return Storage::disk('local')->delete('laravel-downloader/' . $Path);
+            }
+        }
+        return false;
     }
     public function move(string $From, string $To): bool
     {
         $this->checkFile();
-        return Storage::disk('local')->move('laravel-downloader/' . $From, 'laravel-downloader/' . $To);
+        if (Storage::exists('laravel-downloader/' . $From)){
+            $getFile = File_dl::where('path', $From)->get();
+            if ($getFile->count() == 1){
+                $getFile->update([
+                    'path'=>$To
+                ]);
+                return Storage::disk('local')->move('laravel-downloader/' . $From, 'laravel-downloader/' . $To);
+            }
+        }
+        return false;
+    }
+    public function Upload(string $ToDirectory,  $request): bool
+    {
+        $this->checkFile();
+        $filename = $request->getClientOriginalName();
+        //Get just filename
+        $filename = pathinfo($filename, PATHINFO_FILENAME);
+        // Get just ext
+        $extension = $request->getClientOriginalExtension();
+        // New file name
+        $fileNameToStore = $filename.'_'.time().'.'.$extension;
+        // Upload Image
+        $output = $request->storeAs('laravel-downloader/' . $ToDirectory,$fileNameToStore);
+        File_dl::create([
+            'path' => $ToDirectory . "/" . $fileNameToStore
+        ]);
+        return true;
     }
     public function copy(string $From, string $To): bool
     {

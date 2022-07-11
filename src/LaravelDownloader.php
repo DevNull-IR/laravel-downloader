@@ -7,6 +7,15 @@ use Illuminate\Support\Facades\Storage;
 
 class LaravelDownloader
 {
+    public function All(): array
+    {
+        return ["Files" => Storage::allFiles('laravel-downloader'), "Directories" => Storage::allDirectories('laravel-downloader')];
+    }
+
+    public function allFiles(string|null $directory = null): array
+    {
+        return Storage::allFiles('laravel-downloader/' . $directory);
+    }
     public function put(string $Path, $content): bool
     {
 

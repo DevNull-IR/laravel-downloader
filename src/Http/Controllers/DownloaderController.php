@@ -11,6 +11,7 @@ class DownloaderController extends BaseController
 {
     public function download(string $DownloadToekn)
     {
+        dd(LaravelDownloaderFacade::allFiles());
         $check_file = Permissions_file::where('token', $DownloadToekn)->get();
         if ($check_file->count() == 1){
             echo time();

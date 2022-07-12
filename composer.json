@@ -2,6 +2,7 @@
     "name": "devnull-ir/laravel-downloader",
     "description": "description",
     "license": "MIT",
+    "minimum-stability": "stable",
     "authors": [
         {
             "name": "HO",

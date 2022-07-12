@@ -17,5 +17,15 @@
         "psr-4": {
             "DevNullIr\\LaravelDownloader\\": "src"
         }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "DevNullIr\\LaravelDownloader\\ServiceProvider\\LaravelDownloaderServiceProvider"
+            ],
+            "aliases": {
+                "LaravelDownloader": "DevNullIr\\LaravelDownloader\\Facade\\LaravelDownloaderFacade"
+            }
+        }
     }
 }

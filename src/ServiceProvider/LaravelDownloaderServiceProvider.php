@@ -17,6 +17,7 @@ class LaravelDownloaderServiceProvider extends ServiceProvider
         $this->app->bind('LaravelDownloader',function (){
             return new LaravelDownloader();
         });
+        $this->mergeConfigFrom(__DIR__ . "/../core/config/config.php");
     }
     /**
      * boot the service provider.
@@ -27,5 +28,11 @@ class LaravelDownloaderServiceProvider extends ServiceProvider
     {
         $this->loadRoutesFrom(__DIR__ . "/../routes/web.php");
         $this->loadMigrationsFrom(__DIR__ . '/../Database/migrations');
+        $this->publishes([
+            __DIR__ . "/../core/config/config.php" => config_path("LaravelDownloader.php")
+        ],'LaravelDownloaderConfig');
+        $this->publishes([
+            __DIR__ . "/../Database/migrations" => database_path("migrations")
+        ],'LaravelDownloaderConfig');
     }
 }

@@ -20,6 +20,10 @@ return new class extends BaseMigration{
             $table->unsignedBigInteger('user_id')->default(0);
             $table->integer('count')->default(0);
             $table->timestamps();
+            $table->unique([
+                'file_id',
+                'user_id'
+            ]);
         });
     }
 

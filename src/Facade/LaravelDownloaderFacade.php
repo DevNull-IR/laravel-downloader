@@ -16,7 +16,9 @@ use Illuminate\Support\Facades\Facade;
  * @method static array makeDirectory(string $Directory)
  * @method static array All()
  * @method static array allFiles(string|null $directory = null)
- * @method static bool copy(string $From, string $To)
+ * @method static bool|int purchased(int $file_id, int $count = 1)
+ * @method static bool|int GeneralPurchased(int $file_id)
+ * @method static Download(string $DownloadToekn)
  * @method static bool exists(string $Path)
  * @method static bool checkFile()
  *

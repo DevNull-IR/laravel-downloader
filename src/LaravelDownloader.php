@@ -3,9 +3,13 @@
 namespace DevNullIr\LaravelDownloader;
 
 use DevNullIr\LaravelDownloader\Database\Models\File_dl;
+use DevNullIr\LaravelDownloader\Database\Models\Permissions_file;
+use DevNullIr\LaravelDownloader\Database\Models\purchased;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class LaravelDownloader
 {
@@ -45,8 +49,8 @@ class LaravelDownloader
     {
         $this->checkFile();
         if (Storage::exists('laravel-downloader/' . $From)){
-            $getFile = File_dl::where('path', $From)->get();
-            if ($getFile->count() == 1){
+            $getFile = File_dl::where('path', $From);
+            if ($getFile->get()->count() == 1){
                 $getFile->update([
                     'path'=>$To
                 ]);
@@ -71,12 +75,6 @@ class LaravelDownloader
             'path' => $ToDirectory . "/" . $fileNameToStore
         ]);
         return true;
-    }
-    public function copy(string $From, string $To): bool
-    {
-        $this->checkFile();
-
-        return Storage::disk('local')->copy('laravel-downloader/' . $From, 'laravel-downloader/' . $To);
     }
     public function exists(string $Path): bool
     {
@@ -107,6 +105,109 @@ class LaravelDownloader
                 'result' => false,
                 'message' => "Directory Already"
             ];
+        }
+    }
+
+    public function purchased(int $file_id, int $count = 1): bool|int
+    {
+        $getFile = File_dl::where('id', $file_id);
+        if ($getFile->get()->count() == 1){
+            $getUser = \App\Models\User::where('id', Auth::id());
+            if ($getUser->get()->count() == 1){
+                $getPurchased = purchased::where('user_id', Auth::id())->where('file_id', $file_id);
+                if ($getPurchased->get()->count() == 0){
+                    purchased::create([
+                        'file_id' => $file_id,
+                        'user_id' => Auth::id(),
+                        'count' => $count
+                    ]);
+                    $getPurchased = purchased::where('user_id', Auth::id())->where('file_id', $file_id);
+                    if ($getPurchased->get()->count() == 1){
+                        return $getPurchased->get()[0]->id;
+                    }
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    public function GeneralPurchased(int $file_id): bool|int
+    {
+        $getFile = File_dl::where('id', $file_id);
+        if ($getFile->get()->count() == 1){
+            $getPurchased = purchased::where('user_id', 0)->where('file_id', $file_id);
+            if ($getPurchased->get()->count() == 0){
+                purchased::create([
+                    'file_id' => $file_id,
+                    'user_id' => 0,
+                    'count' => 1
+                ]);
+                $getPurchased = purchased::where('user_id', 0)->where('file_id', $file_id);
+                if ($getPurchased->get()->count() == 1){
+                    return $getPurchased->get()[0]->id;
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+    public function registerToken(int $purchased_id)
+    {
+        $getPurchased = purchased::where('id', $purchased_id)->where('user_id', Auth::id());
+        if ($getPurchased->count() == 1){
+            Permissions_file::create([
+                'purchased_id' => $purchased_id,
+                'token' => Str::random(rand(5,16)),
+                'time' => time()+ (5 * 60)
+            ]);
+        }
+    }
+
+
+
+    public function Download(string $DownloadToekn)
+    {
+        $check_file = Permissions_file::where('token', $DownloadToekn);
+        if ($check_file->get()->count() == 1){
+            if ($check_file->get()[0]->time >= time()){
+                $getPermission = purchased::where('id', $check_file->get()[0]->purchased_id);
+                if ($getPermission->get()->count() == 1){
+                    $getFile = File_dl::where('id', $getPermission->get()[0]->file_id);
+                    if ($getFile->get()->count() == 1){
+                        if ($getPermission->get()[0]->count == 0){
+                            if ($getPermission->get()[0]->user_id == 0){
+                                $check_file->delete();
+                                return Storage::download('laravel-downloader/' . $getFile->get()[0]->path);
+                            }else{
+                                if ($getPermission->get()[0]->user_id == Auth::id()){
+                                    $check_file->delete();
+                                    return Storage::download('laravel-downloader/' . $getFile->get()[0]->path);
+                                }
+                            }
+                        }elseif($getPermission->get()[0]->count != 0){
+                            if ($getPermission->get()[0]->user_id == 0){
+                                $check_file->delete();
+                                return Storage::download('laravel-downloader/' . $getFile->get()[0]->path);
+                            }
+                            if ($getPermission->get()[0]->user_id == Auth::id()){
+                                if ($getPermission->get()[0]->count - 1 == 0){
+                                    $getPermission->delete();
+                                }else{
+                                    $getPermission->update([
+                                        'count' => $getPermission->get()[0]->count - 1
+                                    ]);
+                                }
+                                $check_file->delete();
+                                return Storage::download('laravel-downloader/' . $getFile->get()[0]->path);
+                            }
+                        }
+                    }
+                }
+            }else{
+                $check_file->delete();
+            }
+        }else{
+            abort(404);
         }
     }
 }

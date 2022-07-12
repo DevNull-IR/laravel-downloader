@@ -155,7 +155,7 @@ class LaravelDownloader
     {
         $getPurchased = purchased::where('id', $purchased_id)->where('user_id', Auth::id());
         if ($getPurchased->count() == 1){
-            Permissions_file::create([
+            return Permissions_file::create([
                 'purchased_id' => $purchased_id,
                 'token' => Str::random(rand(5,16)),
                 'time' => time()+ (5 * 60)

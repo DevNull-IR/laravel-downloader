@@ -2,14 +2,19 @@
 use \DevNullIr\LaravelDownloader\Facade\LaravelDownloaderFacade as LaravelDownloader;
 
 if(! function_exists('purchased')){
-    function purchased(int $user_id, int $file_id, int $count = 1): bool{
-        return LaravelDownloader::purchased($user_id, $file_id, $count);
+    function purchased(int $file_id, int $count = 1): bool{
+        return LaravelDownloader::purchased($file_id, $count);
     }
 }
 
 if (! function_exists('GeneralPurchased')){
     function GeneralPurchased(int $file_id): bool|int{
         return LaravelDownloader::GeneralPurchased($file_id);
+    }
+}
+if (! function_exists('GeneralPurchased')){
+    function registerToken(int $purchased_id){
+        return LaravelDownloader::registerToken($purchased_id);
     }
 }
 

@@ -4,5 +4,7 @@ use \DevNullIr\LaravelDownloader\Http\Controllers\DownloaderController;
 
 
 Route::group(['middleware' => 'web'],function (){
-    Route::get('/dl/{DownloadToekn}', [DownloaderController::class, 'download']);
+    if (config('LaravelDownloader.showDownloadRoute')){
+        Route::get('/' . config('LaravelDownloader.download_route') . '/{DownloadToekn}', [DownloaderController::class, 'download'])->name('laravelDownloaderDl');
+    }
 });

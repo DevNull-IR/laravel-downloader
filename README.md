@@ -5,6 +5,7 @@ Download as a token with a specific time for your users or as a public use but a
 # Supported Version
 | Package Version | PHP Version |
 |---- |----|
+| [1.0.3](https://github.com/DevNull-IR/laravel-downloader/releases/tag/1.0.2) | [8.1](https://php.net) |
 | [1.0.2](https://github.com/DevNull-IR/laravel-downloader/releases/tag/1.0.2) | [8.1](https://php.net) |
 
 
@@ -62,9 +63,7 @@ and change your function controller
 
 ```php
 public function upload(Request $request){
-
     LaravelDownloader::Upload("videoPros", $request->file('input'));
-
 }
 ```
 
@@ -130,7 +129,61 @@ The token you create here is for download and you must introduce it to your user
 
 ```php
 LaravelDownloader::registerToken(1);
-
 // You must enter the access ID that you gave to the user, and here the ID will be 1
 ```
+helper function for this method:
+
+`registerToken(int $purchased_id)`
+
 # Download File
+
+`LaravelDownloader::Download($DownloadToken);`
+
+The token created in the previous step must be entered here
+
+After validation, the download will start
+
+helper function for this method:
+
+`Download_ld(string $DownloadToken)`
+
+***You must return the value to start the download***
+
+You can use the following address for your downloads
+
+`http://yourdomain/dl/{token}`
+
+You can personalize this address as you will learn later
+
+# configuration
+
+run this command to terminal:
+
+`php artisan vendor:publish --tag="LaravelDownloaderConfig"`
+
+Now enter the config folder and open the LaravelDownloader.php file
+
+To change the default address of downloads from this file, find the key "download_route" in the returned array and change the value inside it to whatever you want.
+Now the default download links have changed.
+
+```php
+return [
+    ...
+    'download_route' => "dl",
+    ...
+];
+```
+
+The special name of this route is "laravelDownloaderDl".
+
+# **Do you want to disable the default route?**
+
+To disable the default route completely, change the value of the "showDownloadRoute" key to false
+
+```php
+return [
+    ...
+    'showDownloadRoute' => true,
+    ...
+];
+```

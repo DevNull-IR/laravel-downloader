@@ -12,7 +12,7 @@ if (! function_exists('GeneralPurchased')){
         return LaravelDownloader::GeneralPurchased($file_id);
     }
 }
-if (! function_exists('GeneralPurchased')){
+if (! function_exists('registerToken')){
     function registerToken(int $purchased_id){
         return LaravelDownloader::registerToken($purchased_id);
     }

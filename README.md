@@ -36,6 +36,15 @@ new Version Laravel:
         ...
     ])->toArray(),
 ```
+old version:
+
+```php
+'aliases' => [
+    ... 
+    "LaravelDownloader" => \DevNullIr\LaravelDownloader\Facade\LaravelDownloaderFacade::class,
+    ...
+];
+```
 
 # Usage
 

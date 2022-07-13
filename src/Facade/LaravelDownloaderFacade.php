@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static bool|int GeneralPurchased(int $file_id)
  * @method static Download(string $DownloadToekn)
  * @method static registerToken(int $purchased_id)
+ * @method static registerTokenGeneral(int $purchased_id)
  * @method static bool exists(string $Path)
  * @method static bool checkFile()
  *

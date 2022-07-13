@@ -162,7 +162,17 @@ class LaravelDownloader
             ]);
         }
     }
-
+	public function registerTokenGeneral(int $purchased_id)
+    {
+        $getPurchased = purchased::where('id', $purchased_id)->where('user_id', 0);
+        if ($getPurchased->count() == 1){
+            return Permissions_file::create([
+                'purchased_id' => $purchased_id,
+                'token' => Str::random(rand(5,16)),
+                'time' => time() + (5 * 60)
+            ]);
+        }
+    }
 
 
     public function Download(string $DownloadToekn)

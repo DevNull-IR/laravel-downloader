@@ -216,8 +216,47 @@ class LaravelDownloader
             }else{
                 $check_file->delete();
             }
-        }else{
-            abort(404);
         }
+            abort(404);
+    }
+
+    public function zipArchive(array $config = ['zipName' => 'ZipArchive', 'removed' => false], array $files = []): array|bool|object
+    {
+
+        $zip = new \ZipArchive;
+        $name = $config['zipName'] ?? "ZipArchive" . '_' . time();
+        if (!Storage::exists('laravel-downloader/zips')){
+            $this->makeDirectory('zips');
+        }
+        if ($this->exists('zips/' . $name . '.zip')){
+            return false;
+        }
+        if (!$zip->open(Storage::path('laravel-downloader/zips/' . $name . '.zip'), 1)){
+            return false;
+        }
+        foreach ($files as $path_id){
+            $files_path = File_dl::where('id', $path_id);
+            foreach ($files_path->get() as $indexs){
+                if ($this->exists($indexs->path)){
+                    $zip->addFile(Storage::path( 'laravel-downloader/' . $indexs->path), basename($indexs->path));
+                    if (isset($config['removed']) && $config['removed']){
+                        Storage::delete("laravel-downloader/" . $indexs->path);
+                        $files_path->delete();
+                    }
+                }
+            }
+        }
+        if (config('LaravelDownloader.PassFile')){
+            if (isset($config['password'])){
+                $zip->setPassword($config['password']);
+            }else{
+                $zip->setPassword(config('LaravelDownloader.filePassword'));
+            }
+        }
+        $zip->close();
+        $file = File_dl::create([
+            'path' => 'zips/' . $name . ".zip"
+        ]);
+        return $file;
     }
 }

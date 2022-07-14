@@ -5,6 +5,7 @@ Download as a token with a specific time for your users or as a public use but a
 # Supported Version
 | Package Version | PHP Version |
 |---- |----|
+| [1.0.6](https://github.com/DevNull-IR/laravel-downloader/releases/tag/1.0.6) | [8.1](https://php.net) |
 | [1.0.5](https://github.com/DevNull-IR/laravel-downloader/releases/tag/1.0.5) | [8.1](https://php.net) |
 | [1.0.4](https://github.com/DevNull-IR/laravel-downloader/releases/tag/1.0.4) | [8.1](https://php.net) |
 | [1.0.3](https://github.com/DevNull-IR/laravel-downloader/releases/tag/1.0.3) | [8.1](https://php.net) |
@@ -146,6 +147,50 @@ helper function for this method:
 
 `registerToken(int $purchased_id)`
 
+register Token For all Users:
+
+`registerTokenGeneral(int $purchased_id);`
+
+Enter the file ID that is for all users, otherwise the token is not allowed
+
+```php
+registerTokenGeneral(1);
+
+// Enter the file ID that is for all users, otherwise the token is not allowed
+
+```
+
+# Zip File
+
+After you have uploaded your file you can zip it
+
+To zip, you need to do the following commands:
+
+```php
+LaravelDownloader::zipArchive(array $config = [], array $files = []): array|bool|object
+```
+In the first parameter, you must enter the settings (as an array)
+
+```php
+LaravelDownloader::zipArchive(['zipName'=>"NameFileZip"], array $files = []);
+```
+
+**Instead of NameFileZip, you must enter the name you want your zip file to have, otherwise the default value will be used.**
+
+```php
+LaravelDownloader::zipArchive(['removed'=>true], array $files = []);
+```
+The default value is false, if you set this value to true, it will delete the files you zip
+
+```php
+LaravelDownloader::zipArchive(['password'=>'domain'], array $files = []);
+```
+If you enable the ability to set a password for zip files, the password will be activated using this option.
+
+By default, encryption is disabled for zip files. And also the default password is domain.com
+
+
+***To activate the password function, you can read the configuration section***
 # Download File
 
 `LaravelDownloader::Download($DownloadToken);`
@@ -198,3 +243,9 @@ return [
     ...
 ];
 ```
+
+# Passwords in zip file
+
+To activate this feature, it is necessary to set the PassFile value to true in the LaravelDownloader.php file in the config directory.
+
+You can also change the filePassword value to change the default password

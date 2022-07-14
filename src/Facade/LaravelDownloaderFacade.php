@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static registerTokenGeneral(int $purchased_id)
  * @method static bool exists(string $Path)
  * @method static bool checkFile()
+ * @method static array|bool|object zipArchive(array $config = ['zipName' => 'ZipArchive', 'removed' => false], array $files = [])
  *
  *
  * @see \DevNullIr\LaravelDownloader\

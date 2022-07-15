@@ -5,12 +5,11 @@ Download as a token with a specific time for your users or as a public use but a
 # Supported Version
 | Package Version | PHP Version |
 |---- |----|
+| [1.0.7](https://github.com/DevNull-IR/laravel-downloader/releases/tag/1.0.7) | [8.1](https://php.net) |
 | [1.0.6](https://github.com/DevNull-IR/laravel-downloader/releases/tag/1.0.6) | [8.1](https://php.net) |
 | [1.0.5](https://github.com/DevNull-IR/laravel-downloader/releases/tag/1.0.5) | [8.1](https://php.net) |
 | [1.0.4](https://github.com/DevNull-IR/laravel-downloader/releases/tag/1.0.4) | [8.1](https://php.net) |
 | [1.0.3](https://github.com/DevNull-IR/laravel-downloader/releases/tag/1.0.3) | [8.1](https://php.net) |
-| [1.0.2](https://github.com/DevNull-IR/laravel-downloader/releases/tag/1.0.2) | [8.1](https://php.net) |
-
 
 
 # Installation
@@ -191,6 +190,16 @@ By default, encryption is disabled for zip files. And also the default password 
 
 
 ***To activate the password function, you can read the configuration section***
+
+# Add file to my zip file
+
+```php
+LaravelDownloader::zipArchive(['password'=>'domain'],[8,9,10]);
+```
+In the second part, you can see the ID of each file
+
+If the output is OK and the zip file is created, a new record will be registered in the database
+
 # Download File
 
 `LaravelDownloader::Download($DownloadToken);`
@@ -246,6 +255,6 @@ return [
 
 # Passwords in zip file
 
-To activate this feature, it is necessary to set the PassFile value to true in the LaravelDownloader.php file in the config directory.
+To activate this feature, it is necessary to set the "PassFile" value to true in the LaravelDownloader.php file in the config directory.
 
 You can also change the filePassword value to change the default password

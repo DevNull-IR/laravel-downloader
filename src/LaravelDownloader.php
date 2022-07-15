@@ -22,17 +22,27 @@ class LaravelDownloader
     {
         return Storage::allFiles('laravel-downloader/' . $directory);
     }
-    public function put(string $Path, $content): bool
+
+    public function put(string $Path, $content): bool|object
     {
 
         $this->checkFile();
-        return Storage::disk('local')->put('laravel-downloader/' . $Path, $content);
+
+        if (Storage::disk('local')->put('laravel-downloader/' . $Path, $content)){
+            return File_dl::create([
+                'path' => $Path
+            ]);
+        }
+        return false;
+
     }
+
     public function append(string $Path, $content): bool
     {
         $this->checkFile();
         return Storage::disk('local')->append('laravel-downloader/' . $Path, $content);
     }
+
     public function delete(string $Path): bool
     {
         $this->checkFile();
@@ -45,6 +55,7 @@ class LaravelDownloader
         }
         return false;
     }
+
     public function move(string $From, string $To): bool
     {
         $this->checkFile();
@@ -59,7 +70,8 @@ class LaravelDownloader
         }
         return false;
     }
-    public function Upload(string $ToDirectory,  $request): bool
+
+    public function Upload(string $ToDirectory,  $request): bool|object
     {
         $this->checkFile();
         $filename = $request->getClientOriginalName();
@@ -71,16 +83,17 @@ class LaravelDownloader
         $fileNameToStore = $filename.'_'.time().'.'.$extension;
         // Upload Image
         $output = $request->storeAs('laravel-downloader/' . $ToDirectory,$fileNameToStore);
-        File_dl::create([
+        return File_dl::create([
             'path' => $ToDirectory . "/" . $fileNameToStore
         ]);
-        return true;
     }
+
     public function exists(string $Path): bool
     {
         $this->checkFile();
         return Storage::exists('laravel-downloader/' . $Path);
     }
+
     public function checkFile(): bool
     {
         if (!Storage::exists('laravel-downloader')){
@@ -89,6 +102,7 @@ class LaravelDownloader
         }
         return false;
     }
+
     public function makeDirectory(string $Directory): array
     {
         if (!Storage::exists('laravel-downloader')){
@@ -108,7 +122,7 @@ class LaravelDownloader
         }
     }
 
-    public function purchased(int $file_id, int $count = 1): bool|int
+    public function purchased(int $file_id, int $count = 1): bool|object
     {
         $getFile = File_dl::where('id', $file_id);
         if ($getFile->get()->count() == 1){
@@ -116,42 +130,34 @@ class LaravelDownloader
             if ($getUser->get()->count() == 1){
                 $getPurchased = purchased::where('user_id', Auth::id())->where('file_id', $file_id);
                 if ($getPurchased->get()->count() == 0){
-                    purchased::create([
+                    return purchased::create([
                         'file_id' => $file_id,
                         'user_id' => Auth::id(),
                         'count' => $count
                     ]);
-                    $getPurchased = purchased::where('user_id', Auth::id())->where('file_id', $file_id);
-                    if ($getPurchased->get()->count() == 1){
-                        return $getPurchased->get()[0]->id;
-                    }
-                    return true;
                 }
             }
         }
         return false;
     }
-    public function GeneralPurchased(int $file_id): bool|int
+
+    public function GeneralPurchased(int $file_id): bool|object
     {
         $getFile = File_dl::where('id', $file_id);
         if ($getFile->get()->count() == 1){
             $getPurchased = purchased::where('user_id', 0)->where('file_id', $file_id);
             if ($getPurchased->get()->count() == 0){
-                purchased::create([
+                return purchased::create([
                     'file_id' => $file_id,
                     'user_id' => 0,
                     'count' => 1
                 ]);
-                $getPurchased = purchased::where('user_id', 0)->where('file_id', $file_id);
-                if ($getPurchased->get()->count() == 1){
-                    return $getPurchased->get()[0]->id;
-                }
-                return true;
             }
         }
         return false;
     }
-    public function registerToken(int $purchased_id)
+
+    public function registerToken(int $purchased_id): array|bool|object
     {
         $getPurchased = purchased::where('id', $purchased_id)->where('user_id', Auth::id());
         if ($getPurchased->count() == 1){
@@ -161,8 +167,10 @@ class LaravelDownloader
                 'time' => time()+ (5 * 60)
             ]);
         }
+        return false;
     }
-	public function registerTokenGeneral(int $purchased_id)
+
+	public function registerTokenGeneral(int $purchased_id): array|bool|object
     {
         $getPurchased = purchased::where('id', $purchased_id)->where('user_id', 0);
         if ($getPurchased->count() == 1){
@@ -172,8 +180,8 @@ class LaravelDownloader
                 'time' => time() + (5 * 60)
             ]);
         }
+        return false;
     }
-
 
     public function Download(string $DownloadToekn)
     {
@@ -231,14 +239,20 @@ class LaravelDownloader
         if ($this->exists('zips/' . $name . '.zip')){
             return false;
         }
-        if (!$zip->open(Storage::path('laravel-downloader/zips/' . $name . '.zip'), 1)){
+        if($zip->open(Storage::path('laravel-downloader/zips/' . $name . '.zip'), 1|8) !== true)
             return false;
-        }
         foreach ($files as $path_id){
             $files_path = File_dl::where('id', $path_id);
             foreach ($files_path->get() as $indexs){
                 if ($this->exists($indexs->path)){
                     $zip->addFile(Storage::path( 'laravel-downloader/' . $indexs->path), basename($indexs->path));
+                    if (config('LaravelDownloader.PassFile')){
+                        if (isset($config['password'])){
+                            $zip->setEncryptionName(basename($indexs->path),\ZipArchive::EM_AES_256, $config['password']);
+                        }else{
+                            $zip->setEncryptionName(basename($indexs->path),\ZipArchive::EM_AES_256, config('LaravelDownloader.filePassword'));
+                        }
+                    }
                     if (isset($config['removed']) && $config['removed']){
                         Storage::delete("laravel-downloader/" . $indexs->path);
                         $files_path->delete();
@@ -246,14 +260,8 @@ class LaravelDownloader
                 }
             }
         }
-        if (config('LaravelDownloader.PassFile')){
-            if (isset($config['password'])){
-                $zip->setPassword($config['password']);
-            }else{
-                $zip->setPassword(config('LaravelDownloader.filePassword'));
-            }
-        }
         $zip->close();
+
         $file = File_dl::create([
             'path' => 'zips/' . $name . ".zip"
         ]);

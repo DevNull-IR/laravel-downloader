@@ -2,14 +2,17 @@
 
 namespace DevNullIr\LaravelDownloader;
 
+use DevNullIr\LaravelDownloader\Database\Models\Course;
 use DevNullIr\LaravelDownloader\Database\Models\File_dl;
 use DevNullIr\LaravelDownloader\Database\Models\Permissions_file;
 use DevNullIr\LaravelDownloader\Database\Models\purchased;
+use DevNullIr\LaravelDownloader\Http\VideoSetting\officalVideo;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+include_once __DIR__ . "/core/config/video/getid3.php";
 
 class LaravelDownloader
 {
@@ -266,5 +269,47 @@ class LaravelDownloader
             'path' => 'zips/' . $name . ".zip"
         ]);
         return $file;
+    }
+
+    public function makeCourse(string $CourseName, string $CoursePath): bool|object
+    {
+        $getCourse = Course::where("course_name", $CourseName)->where('course_path', $CoursePath);
+        if ($getCourse->count() != 0 ){
+            return false;
+        }
+        if (!Storage::exists("laravel-downloader/" . $CoursePath)){
+            Storage::makeDirectory("laravel-downloader/" . $CoursePath);
+        }
+        return Course::create([
+            "course_name" =>$CourseName,
+            'course_path' => $CoursePath
+        ]);
+    }
+
+    public function getDurationCourse(int $Course_ID): string|bool
+    {
+        $getID3 = new \getID3;
+        $DI = 0;
+        $coures = Course::where('id', $Course_ID);
+        if ($coures->count() != 1){
+            return false;
+        }
+        foreach (Storage::files("laravel-downloader/" . $coures->get()[0]->course_path) as $FilePath){
+            $mimes = [
+                "WEBM",
+                "AVI",
+                "MP4"
+            ];
+            if (array_search(strtoupper(pathinfo(basename(Storage::path($FilePath)), PATHINFO_EXTENSION)), $mimes)){
+                $file = $getID3->analyze(Storage::path($FilePath));
+
+                $DI = $DI + $file['playtime_seconds'];
+            }
+        }
+        $duration = gmdate('H:i:s', $DI);
+        $coures->update([
+            "duration" =>  $duration
+        ]);
+        return $duration;
     }
 }

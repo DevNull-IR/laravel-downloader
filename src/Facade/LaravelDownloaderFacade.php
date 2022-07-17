@@ -24,7 +24,8 @@ use Illuminate\Support\Facades\Facade;
  * @method static bool exists(string $Path)
  * @method static bool checkFile()
  * @method static array|bool|object zipArchive(array $config = ['zipName' => 'ZipArchive', 'removed' => false], array $files = [])
- *
+ * @method static bool|object makeCourse(string $CourseName, string $CoursePath)
+ * @method static string|bool getDurationCourse(int $Course_ID)
  *
  * @see \DevNullIr\LaravelDownloader\
  * @package DevNullIr\LaravelDownloader\Facade

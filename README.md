@@ -5,6 +5,7 @@ Download as a token with a specific time for your users or as a public use but a
 # Supported Version
 | Package Version | PHP Version |
 |---- |----|
+| [1.1.0](https://github.com/DevNull-IR/laravel-downloader/releases/tag/1.1.0) | [8.1](https://php.net) |
 | [1.0.7](https://github.com/DevNull-IR/laravel-downloader/releases/tag/1.0.7) | [8.1](https://php.net) |
 | [1.0.6](https://github.com/DevNull-IR/laravel-downloader/releases/tag/1.0.6) | [8.1](https://php.net) |
 | [1.0.5](https://github.com/DevNull-IR/laravel-downloader/releases/tag/1.0.5) | [8.1](https://php.net) |
@@ -219,6 +220,51 @@ You can use the following address for your downloads
 `http://yourdomain/dl/{token}`
 
 You can personalize this address as you will learn later
+
+# Create New Course
+
+### info
+
+In version 1.1.0, we have provided a new feature for users to make their work easier and start selling their courses more easily.
+
+Using this part and the next part, you can create a course and then check how many minutes this course is.
+
+## Starting 
+```php
+public static function makeCourse(string $CourseName, string $CoursePath): bool|object;
+```
+
+To create a new course, you need to give the name of that course and the directory address of that course
+
+
+The directory you see is created automatically by the system itself, you don't need to create it
+
+
+***This directory is located in storage/app/laravel-downloader***
+
+
+**Be sure to enter the address you choose for the course in the first parameter when uploading**
+
+
+```php
+LaravelDownloader::makeCourse("learn laravel downloader", "laravel-downloader-course")
+```
+
+The output is either `false` or an object from the `eloquent model`
+
+
+# Get Duration of all videos of a Course
+
+```php
+public static function getDurationCourse(int $Course_ID): string|bool;
+```
+
+In the first parameter, you must enter the Course ID created in the previous step
+
+The output is either a String or False
+
+
+If the output value was false, it means that it did not find the course, and if it was String, it means that it has given you the duration of all the videos
 
 # configuration
 

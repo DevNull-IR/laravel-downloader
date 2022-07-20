@@ -5,6 +5,7 @@ Download as a token with a specific time for your users or as a public use but a
 # Supported Version
 | Package Version | PHP Version |
 |---- |----|
+| [1.2.0](https://github.com/DevNull-IR/laravel-downloader/releases/tag/1.2.0) | [8.1](https://php.net) |
 | [1.1.0](https://github.com/DevNull-IR/laravel-downloader/releases/tag/1.1.0) | [8.1](https://php.net) |
 | [1.0.7](https://github.com/DevNull-IR/laravel-downloader/releases/tag/1.0.7) | [8.1](https://php.net) |
 | [1.0.6](https://github.com/DevNull-IR/laravel-downloader/releases/tag/1.0.6) | [8.1](https://php.net) |

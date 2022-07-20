@@ -266,6 +266,16 @@ The output is either a String or False
 
 If the output value was false, it means that it did not find the course, and if it was String, it means that it has given you the duration of all the videos
 
+# If he is not logged in, he cannot read the article
+
+For this, you only need to enter the content of your article as follows (Enter in the blade):
+
+```blade
+...
+@ContinueAuth("Content Your Article (You can also write html here.)", "Pleas Logined And Continue (You can also write html here.)", "Parent tag classes of the desired text", "The desired text tag classes")
+...
+```
+
 # configuration
 
 run this command to terminal:

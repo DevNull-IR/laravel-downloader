@@ -304,3 +304,18 @@ return [
 To activate this feature, it is necessary to set the "PassFile" value to true in the LaravelDownloader.php file in the config directory.
 
 You can also change the filePassword value to change the default password
+
+
+
+# Models
+
+ Course Model namespace:`DevNullIr\LaravelDownloader\Database\Models\Course`
+
+
+ File List Model namespace:`DevNullIr\LaravelDownloader\Database\Models\File_dl`
+
+
+ Permissions files Model namespace:`DevNullIr\LaravelDownloader\Database\Models\Permissions_file`
+
+
+ purchased's Model namespace:`DevNullIr\LaravelDownloader\Database\Models\purchased`

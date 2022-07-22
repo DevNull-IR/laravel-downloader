@@ -2,6 +2,7 @@
 <project version="4">
   <component name="BladeInjectionConfiguration" default="false">
     <directives>
+      <data directive="@ContinueAuth" injection="true" prefix="&lt;?php _bladeDirective(" suffix="); ?&gt;" />
       <data directive="@append" />
       <data directive="@auth" injection="true" prefix="&lt;?php if(auth()-&gt;guard(" suffix=")-&gt;check()): ?&gt;" />
       <data directive="@aware" injection="true" prefix="&lt;?php $attributes = $attributes-&gt;exceptProps(" suffix="); ?&gt;" />

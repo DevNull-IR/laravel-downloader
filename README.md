@@ -314,6 +314,35 @@ return [
 ];
 ```
 
+If `showView` is true, route `endDl` is activated
+
+sample route:
+
+`127.0.0.1:8000/endDl/Token`
+
+This route creates a route that you can show a thank you message to the user.
+
+For example, thank you for downloading from our site, there are many examples all over the internet.
+
+You can customize the appearance that is shown to the user, which I will tell you later.
+
+### change route tnx dl
+
+To change the name of that route, you can put whatever you want in the thank_route part of the config file and it will change
+
+### change view tnx dl route
+
+To customize the endDl output, you must enter the following command in the command line.
+
+```bash
+php artisan vendor:publish --tag="laravel-downloader-views"
+```
+
+
+Now it is saved in the path below the desired view
+
+
+
 # Passwords in zip file
 
 To activate this feature, it is necessary to set the "PassFile" value to true in the LaravelDownloader.php file in the config directory.

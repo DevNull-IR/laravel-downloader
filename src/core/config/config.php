@@ -5,6 +5,6 @@ return [
     'showDownloadRoute' => true,
     'PassFile' => false,
     'filePassword' => "domain.com",
-    'showView' => true,
+    'showView' => false,
     'thank_route' => "endDl"
 ];

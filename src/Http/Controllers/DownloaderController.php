@@ -11,7 +11,16 @@ use Illuminate\Support\Facades\Storage;
 
 class DownloaderController extends BaseController
 {
-    public function download(string $DownloadToekn)
+    public function dl(string $DownloadToekn)
+    {
+        return $this->download($DownloadToekn);
+    }
+
+    public function thank_dl(string $DownloadToekn)
+    {
+        return view("LaravelDownloader::download", ['redirect' => route("laravelDownloaderDl", $DownloadToekn)]);
+    }
+    protected function download(string $DownloadToekn)
     {
         $check_file = Permissions_file::where('token', $DownloadToekn);
         if ($check_file->get()->count() == 1){

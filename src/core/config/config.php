@@ -4,5 +4,7 @@ return [
     'download_route' => "dl",
     'showDownloadRoute' => true,
     'PassFile' => false,
-    'filePassword' => "domain.com"
+    'filePassword' => "domain.com",
+    'showView' => true,
+    'thank_route' => "endDl"
 ];

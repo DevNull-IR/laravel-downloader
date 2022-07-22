@@ -2,6 +2,8 @@
 
 Download as a token with a specific time for your users or as a public use but as a token and with a specific time
 
+
+### *****It does not allow downloading by idm*****
 # Supported Version
 | Package Version | PHP Version |
 |---- |----|

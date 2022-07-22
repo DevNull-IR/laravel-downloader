@@ -54,7 +54,7 @@ old version:
 
 Enter the following command in your terminal
 
-```cmd
+```shell
 php artisan migrate
 ```
 

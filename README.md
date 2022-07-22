@@ -341,8 +341,9 @@ php artisan vendor:publish --tag="laravel-downloader-views"
 
 Now it is saved in the path below the desired view
 
+![resources/views/vendor/laravelDownloader/download.blade.php](https://raw.githubusercontent.com/DevNull-IR/laravel-downloader/main/others/cap-1.PNG)
 
-
+`resources/views/vendor/laravelDownloader/download.blade.php`
 # Passwords in zip file
 
 To activate this feature, it is necessary to set the "PassFile" value to true in the LaravelDownloader.php file in the config directory.
